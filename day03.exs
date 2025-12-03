@@ -22,7 +22,6 @@ defmodule Day03 do
       |> Enum.drop(1)
       |> select_n_batteries(n-1, acc ++ [selected])
   end
-
 end
 
 banks = File.stream!("input/day03") |> Enum.map(&String.trim_trailing/1)
