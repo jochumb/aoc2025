@@ -1,21 +1,18 @@
 def count_free_rolls(grid):
-  count = 0
-  for x in range(len(grid)):
-    for y in range(len(grid)):
-      if is_free_roll(x, y, grid):
-        count = count + 1
-  return count
+  return len(free_rolls(grid))
 
 def count_free_rolls_iter(grid, acc=0):
-  count = 0
+  rs = free_rolls(grid)
+  if len(rs) == 0: return acc
+  return count_free_rolls_iter(update_grid(grid, rs), acc+len(rs))
+
+def free_rolls(grid):
   free_rolls = []
   for x in range(len(grid)):
     for y in range(len(grid)):
       if is_free_roll(x, y, grid):
         free_rolls.append((x, y))
-        count = count + 1
-  if count == 0: return acc
-  return count_free_rolls_iter(update_grid(grid, free_rolls), acc+count)
+  return free_rolls
 
 def is_free_roll(x, y, grid):
   if not is_roll(x, y, grid): return False
@@ -42,4 +39,4 @@ if __name__ == "__main__":
   with open("input/day04") as f:
     grid = [list(line.strip()) for line in f.readlines()]
     print('Part 1: {}'.format(count_free_rolls(grid)))
-    print('Part 1: {}'.format(count_free_rolls_iter(grid)))
+    print('Part 2: {}'.format(count_free_rolls_iter(grid)))
