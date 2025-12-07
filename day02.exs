@@ -25,14 +25,13 @@ defmodule Day02 do
       1 -> false
       length -> 1..div(length,2)
         |> Enum.filter(&(rem(length, &1) == 0))
-        |> Enum.map(&(validate_with_chunks(id, &1)))
-        |> Enum.any?
+        |> Enum.any?(&(validate_with_chunks(id, &1)))
     end
   end
 
   defp validate_with_chunks(id, chunk_size) do
     [head|tail] = Enum.chunk_every(String.graphemes(id), chunk_size)
-    Enum.all?(tail, fn i -> i == head end)
+    Enum.all?(tail, &(&1==head))
   end
 end
 
