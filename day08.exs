@@ -5,7 +5,7 @@ defmodule Day08 do
     nodes
       |> sorted_edges
       |> Enum.take(n)
-      |> merge_circuits
+      |> merge_edges
       |> Enum.map(&length/1)
       |> Enum.sort
       |> Enum.reverse
@@ -16,7 +16,7 @@ defmodule Day08 do
   def full_circuit(nodes) do
     nodes
       |> sorted_edges
-      |> merge_all_circuits(length(nodes))
+      |> merge_all_nodes(length(nodes))
       |> calc_wall_distance(Map.new(nodes))
   end
 
@@ -34,15 +34,15 @@ defmodule Day08 do
     {{ia, ib}, :math.sqrt(Integer.pow(abs(ax-bx), 2) + Integer.pow(abs(ay-by), 2) + Integer.pow(abs(az-bz), 2))}
   end
 
-  defp merge_circuits(edges, circuits\\[])
-  defp merge_circuits([], circuits), do: circuits
-  defp merge_circuits([e|es], []), do: merge_circuits(es, [e])
-  defp merge_circuits([e|es], circuits), do: merge_circuits(es, merge_edge(e, circuits))
+  defp merge_edges(edges, circuits\\[])
+  defp merge_edges([], circuits), do: circuits
+  defp merge_edges([e|es], []), do: merge_edges(es, [e])
+  defp merge_edges([e|es], circuits), do: merge_edges(es, merge_edge(e, circuits))
 
-  defp merge_all_circuits(edges, node_count, circuits\\[], final\\:none)
-  defp merge_all_circuits([e|es], nc, [], _), do: merge_all_circuits(es, nc, [e], e)
-  defp merge_all_circuits(_, nc, [c|[]], final) when length(c) == nc, do: List.to_tuple(final)
-  defp merge_all_circuits([e|es], nc, circuits, _), do: merge_all_circuits(es, nc, merge_edge(e, circuits), e)
+  defp merge_all_nodes(edges, node_count, circuits\\[], final\\:none)
+  defp merge_all_nodes([e|es], nc, [], _), do: merge_all_nodes(es, nc, [e], e)
+  defp merge_all_nodes(_, nc, [c|[]], final) when length(c) == nc, do: List.to_tuple(final)
+  defp merge_all_nodes([e|es], nc, circuits, _), do: merge_all_nodes(es, nc, merge_edge(e, circuits), e)
 
   defp merge_edge(edge, circuits) do
     {rest, to_merge} = circuits |> Enum.split_with(&(MapSet.disjoint?(MapSet.new(&1), MapSet.new(edge))))
